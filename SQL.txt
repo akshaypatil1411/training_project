@@ -1,0 +1,81 @@
+Script
+----------------------------
+Table creation
+------------------------------------------------------
+create table book_master(
+book_code varchar(10),
+book_title varchar(20),
+book_author varchar(20),
+is_issued number(1),
+is_issuable number(1),
+constraint book_code_pk primary key (book_code),
+CONSTRAINT ck_is_issued_chk CHECK (is_issued IN (1,0)),
+CONSTRAINT ck_is_issuable_chk CHECK (is_issuable IN (1,0))
+);
+
+create table member_master(
+member_code varchar(10),
+member_type varchar(10),
+member_name varchar(20),
+no_of_books_issued number(5),
+constraint member_code_pk primary key (member_code),
+CONSTRAINT mem_type_chk CHECK (member_type IN ('student','faculty','Student','Faculty'))
+);
+
+create table issue_master(
+issue_serial_no number GENERATED ALWAYS as IDENTITY(START with 1 INCREMENT by 1),
+date_of_issue date default SYSDATE  not null,
+date_of_return date,
+book_code varchar(10),
+member_code varchar(10),
+constraint issue_serial_no_pk primary key (issue_serial_no),
+CONSTRAINT book_code_FK FOREIGN KEY(book_code) REFERENCES book_master(book_code),
+CONSTRAINT member_code_FK FOREIGN KEY(member_code) REFERENCES member_master(member_code)
+);
+
+-----------------------------------------------------------------------------------------
+Data insertion
+---------------------------------------------------------
+book_master
+--------------
+insert into book_master values('B001','Wings of Fire','Abdul Kalam',1,1);
+insert into book_master values('B002','In Search of Time','Marcel Proust',1,1);
+insert into book_master values('B003','Ulysses','James Joyce',1,0);
+insert into book_master values('B004','The Great Gatsby','F. Scott Fitzgerald',0,1);
+insert into book_master values('B005','War and Peace','Leo Tolstoy',1,1);
+insert into book_master values('B006','Lolita','Vladimir Nabokov',0,1);
+insert into book_master values('B007','Hamlet','William Shakespeare',1,1);
+insert into book_master values('B008','Pride and Prejudice','Jane Austen',1,0);
+insert into book_master values('B009','Wuthering Heights','Emily Bronte',1,1);
+insert into book_master values('B010','Anna Karenina','Leo Tolstoy',0,1);
+
+
+member_master
+--------------------
+insert into member_master values('M001','student','Akshay',1);
+insert into member_master values('M002','student','Pratik',2);
+insert into member_master values('M003','student','Vishal',3);
+insert into member_master values('M004','student','Aman',1);
+insert into member_master values('M005','student','Vinit',2);
+insert into member_master values('M006','faculty','Deshmukh',10);
+insert into member_master values('M007','faculty','Salunkhe',14);
+insert into member_master values('M008','faculty','Pawar',20);
+insert into member_master values('M009','faculty','Patil',5);
+insert into member_master values('M010','faculty','Kadam',4);
+
+issue_master
+-----------------------
+insert into issue_master(date_of_return,book_code,member_code) values (SYSDATE+10,'B001','M001');
+insert into issue_master(date_of_return,book_code,member_code) values (SYSDATE+15,'B002','M004');
+insert into issue_master(date_of_return,book_code,member_code) values (SYSDATE+11,'B004','M007');
+insert into issue_master(date_of_return,book_code,member_code) values (SYSDATE+17,'B005','M005');
+insert into issue_master(date_of_return,book_code,member_code) values (SYSDATE+10,'B006','M006');
+insert into issue_master(date_of_return,book_code,member_code) values (SYSDATE+90,'B007','M010');
+insert into issue_master(date_of_return,book_code,member_code) values (SYSDATE+90,'B009','M007');
+insert into issue_master(date_of_return,book_code,member_code) values (SYSDATE+90,'B010','M002');
+insert into issue_master(date_of_return,book_code,member_code) values (SYSDATE+70,'B002','M003');
+insert into issue_master(date_of_return,book_code,member_code) values (SYSDATE+10,'B009','M006');
+
+
+
+
